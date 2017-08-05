@@ -10,9 +10,15 @@
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.3",
     "express": "~4.15.2",
+    "google-maps-react": "^1.1.0",
     "jade": "~1.11.0",
     "morgan": "~1.8.1",
+    "prop-types": "^15.5.10",
     "serve-favicon": "~2.4.2",
     "stylus": "0.54.5"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "heroku-postbuild": "cd client && npm install --only=dev && npm install && npm run build"
   }
 }
