@@ -6,7 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var stylus = require('stylus');
 
-var index = require('./routes/index');
+var index = require('./index');
 var users = require('./routes/users');
 var trucks = require('./routes/trucks');
 
