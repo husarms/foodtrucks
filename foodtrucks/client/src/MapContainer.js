@@ -34,19 +34,38 @@ export class MapContainer extends Component {
 
     render() {
         return (
-            <Map google={this.props.google}
-                 onClick={this.onMapClicked}>
-                <Marker onClick={this.onMarkerClick}
-                        name={'Current location'} />
+            <div className="map-container">
+                <Map google={this.props.google}
+                    onClick={this.onMapClicked}
+                    initialCenter={{lat: 37.5334648, lng: -77.4362083}}
+                    zoom={17}
+                    className="map">
 
-                <InfoWindow
-                    marker={this.state.activeMarker}
-                    visible={this.state.showingInfoWindow}>
-                    <div>
-                        <h1>{this.state.selectedPlace.name}</h1>
-                    </div>
-                </InfoWindow>
-            </Map>
+                    {this.props.trucks.map(truck =>
+                        <Marker onClick={this.onMarkerClick}
+                                name={truck.name}
+                                description={truck.description}
+                                locationName={truck.locationName}
+                                address={truck.address}
+                                url={truck.url}
+                                position={{lat: truck.latitude, lng: truck.longitude}}/>
+                    )}
+
+                    <InfoWindow
+                        marker={this.state.activeMarker}
+                        visible={this.state.showingInfoWindow}>
+                        <div>
+                            <h1>{this.state.selectedPlace.name}</h1>
+                            <ul className="list">
+                                <li>{this.state.selectedPlace.description}</li>
+                                <li>{this.state.selectedPlace.locationName}</li>
+                                <li>{this.state.selectedPlace.address}</li>
+                                <li><a href={this.state.selectedPlace.url} target="_blank">Go to website</a></li>
+                            </ul>
+                        </div>
+                    </InfoWindow>
+                </Map>
+            </div>
         )
     }
 };

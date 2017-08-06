@@ -5,7 +5,7 @@ var router = express.Router();
 router.get('/', function(req, res, next) {
     // Comment out this line:
     //res.send('respond with a resource');
-
+    console.log(`Getting trucks...`);
     // And insert something like this instead:
     res.json([{
         id: 1,
@@ -13,8 +13,8 @@ router.get('/', function(req, res, next) {
         description: "Healthy",
         locationName: "Martin Agency",
         address: "1 Shockoe Slip, Richmond, VA 23219",
-        latitude: 37.5664821,
-        longitude: -77.502133,
+        latitude: 37.534491,
+        longitude: -77.433533,
         url: "http://www.goatocado.com"
     }, {
         id: 2,
