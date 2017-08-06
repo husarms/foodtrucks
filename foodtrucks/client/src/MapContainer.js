@@ -8,11 +8,20 @@ export class MapContainer extends Component {
             showingInfoWindow: false,
             activeMarker: {},
             selectedPlace: {},
+            truck: []
         }
 
         // binding this to event-handler functions
         this.onMarkerClick = this.onMarkerClick.bind(this);
         this.onMapClicked = this.onMapClicked.bind(this);
+        this.handleSelectedTruckChange = this.handleSelectedTruckChange.bind(this);
+    }
+
+    componentWillReceiveProps(nextProps){
+        if(nextProps.truck !== this.state.truck){
+            this.handleSelectedTruckChange(nextProps.truck);
+        }
+
     }
 
     onMarkerClick(props, marker, e) {
@@ -32,6 +41,27 @@ export class MapContainer extends Component {
         }
     }
 
+    handleSelectedTruckChange(truck){
+        var markerReference = this.refs["truck-" + truck.id];
+        if(markerReference === undefined){
+            return;
+        }
+        var place = {
+            name: truck.name,
+            description: truck.description,
+            locationName: truck.locationName,
+            address: truck.address,
+            url: truck.url,
+            position: {lat: truck.latitude, lng: truck.longitude}
+        }
+        this.setState({
+            truck: truck,
+            selectedPlace: place,
+            activeMarker: markerReference.marker,
+            showingInfoWindow: true
+        });
+    }
+
     render() {
         return (
             <div className="map-container">
@@ -43,12 +73,13 @@ export class MapContainer extends Component {
 
                     {this.props.trucks.map(truck =>
                         <Marker onClick={this.onMarkerClick}
-                                name={truck.name}
-                                description={truck.description}
-                                locationName={truck.locationName}
-                                address={truck.address}
-                                url={truck.url}
-                                position={{lat: truck.latitude, lng: truck.longitude}}/>
+                            name={truck.name}
+                            description={truck.description}
+                            locationName={truck.locationName}
+                            address={truck.address}
+                            url={truck.url}
+                            position={{lat: truck.latitude, lng: truck.longitude}}
+                            ref={"truck-" + truck.id}/>
                     )}
 
                     <InfoWindow

@@ -3,7 +3,13 @@ import './App.css';
 import MapContainer from './MapContainer.js';
 
 class App extends Component {
-    state = {trucks: []}
+    constructor(props) {
+        super(props);
+        this.state = {
+            trucks: [],
+            truck: []
+        }
+    }
 
     componentDidMount() {
         fetch('/api/trucks')
@@ -33,7 +39,14 @@ class App extends Component {
         }
     }
 
+    handleSelectedTruckChange(truck){
+        this.setState({
+            truck: truck
+        });
+    }
+
     render() {
+        var _this = this;
         return (
             <div>
                 <nav className="navbar is-transparent">
@@ -53,13 +66,13 @@ class App extends Component {
                     <div id="navMenuTransparentExample" className="navbar-menu">
                         <div className="navbar-start">
                             <div className="navbar-item has-dropdown is-hoverable">
-                                <a className="navbar-link " href="http://bulma.io/blog/">
+                                <a className="navbar-link " href="#">
                                     Food Trucks
                                 </a>
                                 <div id="blogDropdown" className="navbar-dropdown is-boxed" data-style="width: 18rem;">
                                 {
                                     this.state.trucks.map(function(truck){
-                                        return <a className="navbar-item" href="#">
+                                        return <a className="navbar-item" href="#" onClick={()=> _this.handleSelectedTruckChange(truck)}>
                                             <div className="navbar-content">
                                                 <p>
                                                     <small className="has-text-info">03 Aug 2017</small>
@@ -76,7 +89,9 @@ class App extends Component {
                 </nav>
                 <div>
                     <MapContainer
-                        trucks={this.state.trucks}/>
+                        trucks={this.state.trucks}
+                        truck={this.state.truck}
+                    />
                 </div>
             </div>
         );
