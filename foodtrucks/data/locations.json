@@ -1,0 +1,24 @@
+[
+  {
+    "id": 1,
+    "location": "Martin Agency",
+    "address": "1 Shockoe Slip, Richmond, VA 23219",
+    "latitude": 37.534491,
+    "longitude": -77.433533
+  },
+  {
+    "id": 2
+    "location": "Troutman Sanders",
+    "address": "1001 Haxall Point, Richmond, VA 23219",
+    "latitude": 37.5335044,
+    "longitude": -77.4383886
+  },
+  {
+    "id": 3,
+    "location": "Riverfront Plaza",
+    "address": "901-951 E Byrd St, Richmond, VA 23219",
+    "latitude": 37.5347684,
+    "longitude": -77.4388865
+  }
+]
+

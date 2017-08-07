@@ -7,7 +7,8 @@ class App extends Component {
         super(props);
         this.state = {
             trucks: [],
-            truck: []
+            truck: [],
+            date: App.getTodaysDate()
         }
     }
 
@@ -37,6 +38,30 @@ class App extends Component {
                 });
             });
         }
+    }
+
+    static getTodaysDate(){
+        var monthNames = ["January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        ];
+        var today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth()+1; //January is 0!
+        var yyyy = today.getFullYear();
+        var monthName = monthNames[today.getMonth()];
+
+        if(dd<10) {
+            dd = '0'+dd
+        }
+
+        if(mm<10) {
+            mm = '0'+mm
+        }
+
+        //today = mm + '/' + dd + '/' + yyyy;
+
+        today = monthName + ' ' + dd + ' ' + yyyy;
+        return today;
     }
 
     handleSelectedTruckChange(truck){
@@ -75,7 +100,7 @@ class App extends Component {
                                         return <a className="navbar-item" href="#" onClick={()=> _this.handleSelectedTruckChange(truck)}>
                                             <div className="navbar-content">
                                                 <p>
-                                                    <small className="has-text-info">03 Aug 2017</small>
+                                                    <small className="has-text-info">{_this.state.date}</small>
                                                 </p>
                                                 <p>{truck.name + " @ " + truck.locationName}</p>
                                             </div>

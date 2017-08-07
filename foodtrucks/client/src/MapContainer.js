@@ -5,6 +5,7 @@ export class MapContainer extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            mapCenter: {lat: 37.535059, lng: -77.435470},
             showingInfoWindow: false,
             activeMarker: {},
             selectedPlace: {},
@@ -18,10 +19,7 @@ export class MapContainer extends Component {
     }
 
     componentWillReceiveProps(nextProps){
-        if(nextProps.truck !== this.state.truck){
-            this.handleSelectedTruckChange(nextProps.truck);
-        }
-
+        this.handleSelectedTruckChange(nextProps.truck);
     }
 
     onMarkerClick(props, marker, e) {
@@ -55,6 +53,7 @@ export class MapContainer extends Component {
             position: {lat: truck.latitude, lng: truck.longitude}
         }
         this.setState({
+            mapCenter: {lat: truck.latitude, lng: truck.longitude},
             truck: truck,
             selectedPlace: place,
             activeMarker: markerReference.marker,
@@ -62,13 +61,25 @@ export class MapContainer extends Component {
         });
     }
 
+   getWidth() {
+        return window.innerWidth
+            || document.documentElement.clientWidth
+            || document.body.clientWidth;
+    }
+
     render() {
+        var zoom = 17;
+        var width = this.getWidth();
+        if(width < 480){
+            zoom = 15;
+        }
         return (
             <div className="map-container">
                 <Map google={this.props.google}
                     onClick={this.onMapClicked}
-                    initialCenter={{lat: 37.5334648, lng: -77.4362083}}
-                    zoom={17}
+                    initialCenter={this.state.mapCenter}
+                    center={this.state.mapCenter}
+                    zoom={zoom}
                     className="map">
 
                     {this.props.trucks.map(truck =>

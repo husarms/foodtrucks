@@ -1,0 +1,36 @@
+[
+  {
+    "id": 1,
+    "name": "Goatacado",
+    "description": "Healthy",
+    "url": "http://www.goatocado.com",
+    "schedule": {
+      "date": "2017-08-06",
+      "location": "Martin Agency"
+    }
+  },
+  {
+    "id": 2,
+    "name": "Dank Eats",
+    "description": "Funky Pitas",
+    "url": "http://www.dankeats.com",
+    "schedule": [
+      {
+        "date": "2017-08-06",
+        "location": "Troutman Sanders"
+      }
+    ]
+  },
+  {
+    "id": 3,
+    "name": "Arroz",
+    "description": "Mexican",
+    "url": "https://www.facebook.com/ArrozRVA/",
+    "schedule": [
+      {
+        "date": "2017-08-06",
+        "location": "Riverfront Plaza"
+      }
+    ]
+  }
+]
