@@ -1,42 +1,57 @@
-import React, {Component} from 'react';
-import './App.css';
-import MapContainer from './MapContainer.js';
+import React, { PureComponent} from 'react';
+import Toolbar from 'react-md/lib/Toolbars';
+import Button from 'react-md/lib/Buttons';
+import SelectField from 'react-md/lib/SelectFields';
+import ListItem from 'react-md/lib/Lists/ListItem';
+import MenuButton from 'react-md/lib/Menus/MenuButton';
+import CSSTransitionGroup from 'react-addons-css-transition-group';
+import Tabs from 'react-md/lib/Tabs/Tabs';
+import Tab from 'react-md/lib/Tabs/Tab';
+import TabsContainer from 'react-md/lib/Tabs/TabsContainer';
+import CircularProgress from 'react-md/lib/Progress/CircularProgress'
 
-class App extends Component {
-    constructor(props) {
+import MapContainer from './MapContainer';
+import TruckGallery from './TruckGallery';
+import TruckDialog from './TruckDialog';
+
+
+const nav = <Button key="nav" icon>menu</Button>;
+const TITLES = ['All', 'Family', 'Friends', 'Coworkers'];
+const titleMenu = (
+    <SelectField
+        key="titleMenu"
+        id="titles"
+        menuItems={TITLES}
+        defaultValue={TITLES[0]}
+    />
+);
+
+class App extends PureComponent {
+
+    constructor(props){
         super(props);
         this.state = {
             trucks: [],
             truck: [],
-            date: App.getTodaysDate()
+            date: App.getTodaysDate(),
+            showMap: false,
+            showGallery: true,
+            activeTabIndex: 0,
+            tabTwoChildren: null
         }
+
+        this._handleTabChange = this._handleTabChange.bind(this);
     }
 
-    componentDidMount() {
+    componentDidMount(){
         fetch('/api/trucks')
             .then(res => res.json())
             .then(trucks => this.setState({trucks}));
+    }
 
-        // Get all "navbar-burger" elements
-        var $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
-
-        // Check if there are any nav burgers
-        if ($navbarBurgers.length > 0) {
-
-            // Add a click event on each of them
-            $navbarBurgers.forEach(function ($el) {
-                $el.addEventListener('click', function () {
-
-                    // Get the target from the "data-target" attribute
-                    var target = $el.dataset.target;
-                    var $target = document.getElementById(target);
-
-                    // Toggle the class on both the "navbar-burger" and the "navbar-menu"
-                    $el.classList.toggle('is-active');
-                    $target.classList.toggle('is-active');
-
-                });
-            });
+    componentWillUnmount() {
+        if (this._timeout) {
+            clearTimeout(this._timeout);
         }
     }
 
@@ -46,19 +61,12 @@ class App extends Component {
         ];
         var today = new Date();
         var dd = today.getDate();
-        var mm = today.getMonth()+1; //January is 0!
         var yyyy = today.getFullYear();
         var monthName = monthNames[today.getMonth()];
 
         if(dd<10) {
             dd = '0'+dd
         }
-
-        if(mm<10) {
-            mm = '0'+mm
-        }
-
-        //today = mm + '/' + dd + '/' + yyyy;
 
         today = monthName + ' ' + dd + ' ' + yyyy;
         return today;
@@ -70,57 +78,110 @@ class App extends Component {
         });
     }
 
+
+    handleTodaysTruckClick(e){
+        if(e){
+            e.preventDefault();
+        }
+        this.setState({
+            showMap: true,
+            showGallery: false
+        });
+    }
+
+    handleViewTrucksClick(e){
+        if(e){
+            e.preventDefault();
+        }
+        this.setState({
+            showMap: false,
+            showGallery: true
+        });
+    }
+
+    _handleTabChange(activeTabIndex) {
+        this.setState({ activeTabIndex });
+    }
+
+    handleDialogClick(e){
+        if(e){
+            e.preventDefault();
+        }
+        this.child._openDialog(e);
+    }
+
+    renderMapContainer(){
+        return <div>
+            <MapContainer
+                trucks={this.state.trucks}
+                truck={this.state.truck}
+            />
+        </div>;
+    }
+
+    renderTruckGallery(){
+        return <div>
+            <TruckGallery
+                trucks={this.state.trucks}
+            />
+        </div>;
+    }
+
     render() {
-        var _this = this;
+
+        const { activeTabIndex } = this.state;
+
+        var actions = [];
+
+        //Add selectable trucks drop down when map is rendered
+        if(this.state.showMap){
+            actions.push(
+                <MenuButton
+                    id="vert-menu"
+                    icon
+                    buttonChildren="more_vert"
+                    className="menu-example"
+                    tooltipLabel="Open some menu"
+                >
+                    {this.state.trucks.map(truck =>
+                        <ListItem primaryText={truck.name} onClick={() => this.handleSelectedTruckChange(truck)}/>,
+                    )}
+                </MenuButton>);
+        }
+
         return (
             <div>
-                <nav className="navbar is-transparent">
-                    <div className="navbar-brand">
-                        <a className="navbar-item" href="#">
-                            <img src="/food-truck-hi.png" alt="Food Truck"></img>
-                        </a>
-
-                        <div className="navbar-burger burger" data-target="navMenuTransparentExample">
-                            <span></span>
-                            <span></span>
-                            <span></span>
-                        </div>
-                    </div>
-
-
-                    <div id="navMenuTransparentExample" className="navbar-menu">
-                        <div className="navbar-start">
-                            <div className="navbar-item has-dropdown is-hoverable">
-                                <a className="navbar-link " href="#">
-                                    Food Trucks
-                                </a>
-                                <div id="blogDropdown" className="navbar-dropdown is-boxed" data-style="width: 18rem;">
-                                {
-                                    this.state.trucks.map(function(truck){
-                                        return <a className="navbar-item" href="#" onClick={()=> _this.handleSelectedTruckChange(truck)}>
-                                            <div className="navbar-content">
-                                                <p>
-                                                    <small className="has-text-info">{_this.state.date}</small>
-                                                </p>
-                                                <p>{truck.name + " @ " + truck.locationName}</p>
-                                            </div>
-                                        </a>
-                                    })
-                                }
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </nav>
-                <div>
-                    <MapContainer
-                        trucks={this.state.trucks}
-                        truck={this.state.truck}
-                    />
-                </div>
+                <Toolbar
+                    themed
+                    title="Food Trucks"
+                    nav={nav}
+                    actions={[
+                        <Button key="favorite" icon onClick={() => this.handleTodaysTruckClick()}>favorite</Button>
+                    ]}
+                    titleMenu={titleMenu}
+                />
+                <TabsContainer onTabChange={this._handleTabChange} activeTabIndex={activeTabIndex} panelClassName="md-grid" colored>
+                    <Tabs tabId="tab">
+                        <Tab label="Tab One">
+                            <h3 className="md-cell md-cell--12">Hello, World! Tab 1</h3>
+                        </Tab>
+                        <Tab label="Tab Two">
+                            <h3 className="md-cell md-cell--12">Hello, World! Tab 2</h3>
+                        </Tab>
+                    </Tabs>
+                </TabsContainer>
+                <TruckDialog onRef={ref => (this.child = ref)}/>
+                {
+                    this.state.showMap &&
+                    this.renderMapContainer()
+                }
+                {
+                    this.state.showGallery &&
+                    this.renderTruckGallery()
+                }
             </div>
         );
     }
 }
 
-export default App;
+export default App

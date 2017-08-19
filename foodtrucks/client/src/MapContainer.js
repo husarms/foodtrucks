@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import {Map, InfoWindow, Marker, GoogleApiWrapper} from 'google-maps-react';
 
+import TruckMarker from './TruckMarker';
+
 export class MapContainer extends Component {
     constructor(props) {
         super(props);
@@ -45,6 +47,7 @@ export class MapContainer extends Component {
             return;
         }
         var place = {
+            truck: truck,
             name: truck.name,
             description: truck.description,
             locationName: truck.locationName,
@@ -84,6 +87,7 @@ export class MapContainer extends Component {
 
                     {this.props.trucks.map(truck =>
                         <Marker onClick={this.onMarkerClick}
+                            truck={truck}
                             name={truck.name}
                             description={truck.description}
                             locationName={truck.locationName}
@@ -97,13 +101,10 @@ export class MapContainer extends Component {
                         marker={this.state.activeMarker}
                         visible={this.state.showingInfoWindow}>
                         <div>
-                            <h1>{this.state.selectedPlace.name}</h1>
-                            <ul className="list">
-                                <li>{this.state.selectedPlace.description}</li>
-                                <li>{this.state.selectedPlace.locationName}</li>
-                                <li>{this.state.selectedPlace.address}</li>
-                                <li><a href={this.state.selectedPlace.url} target="_blank">Go to website</a></li>
-                            </ul>
+                            <br/>
+                            <div>
+                                <TruckMarker truck={this.state.selectedPlace.truck}></TruckMarker>
+                            </div>
                         </div>
                     </InfoWindow>
                 </Map>
